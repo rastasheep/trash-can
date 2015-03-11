@@ -255,8 +255,11 @@ func (cmd Start) waitForInstancesToStage(app models.Application) bool {
 		fmt.Println("Start#waitForInstancesToStage, time:%v", time.Since(stagingStartTime) < cmd.StagingTimeout)
 	}
 
+	fmt.Println("Start#waitForInstancesToStage, after wait loop:%v", err)
+	fmt.Println("Start#waitForInstancesToStage, isStagingError:%v", isStagingError(err))
 	if err != nil && !isStagingError(err) {
 		cmd.ui.Say("")
+		fmt.Println("Start#waitForInstancesToStage, its error")
 		cmd.ui.Failed(T("{{.Err}}\n\nTIP: use '{{.Command}}' for more information",
 			map[string]interface{}{
 				"Err":     err.Error(),
@@ -264,9 +267,11 @@ func (cmd Start) waitForInstancesToStage(app models.Application) bool {
 	}
 
 	if time.Since(stagingStartTime) >= cmd.StagingTimeout {
+		fmt.Println("Start#waitForInstancesToStage, time slice grater than")
 		return false
 	}
 
+	fmt.Println("Start#waitForInstancesToStage, time slice not grater than")
 	return true
 }
 
