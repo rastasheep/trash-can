@@ -334,6 +334,7 @@ func (gateway Gateway) waitForJob(jobUrl, accessToken string, timeout time.Durat
 		}
 		var request *Request
 		request, err = gateway.NewRequest("GET", jobUrl, accessToken, nil)
+		fmt.Printf("Gateway#waitForJob, jobUrl: %v", jobUrl)
 		response := &JobResource{}
 		_, err = gateway.PerformRequestForJSONResponse(request, response)
 		if err != nil {
