@@ -145,27 +145,28 @@ func (cmd *Start) ApplicationWatchStaging(app models.Application, orgName, space
 	loggingStartedChan := make(chan bool)
 	doneLoggingChan := make(chan bool)
 
-	fmt.Printf("Start#ApplicationWatchStaging")
+	fmt.Println("Start#ApplicationWatchStaging")
 	go cmd.tailStagingLogs(app, loggingStartedChan, doneLoggingChan)
 	go func() {
 		<-stopLoggingChan
-		fmt.Printf("Start#ApplicationWatchStaging, stopLoggingChan")
+		fmt.Println("Start#ApplicationWatchStaging, stopLoggingChan")
 		cmd.logRepo.Close()
 	}()
 	<-loggingStartedChan // block until we have established connection to Loggregator
-	fmt.Printf("Start#ApplicationWatchStaging, after loggingStartedChan")
+	fmt.Println("Start#ApplicationWatchStaging, after loggingStartedChan")
 
 	updatedApp, apiErr := start(app)
 	if apiErr != nil {
+		fmt.Println("Start#ApplicationWatchStaging, api error")
 		cmd.ui.Failed(apiErr.Error())
 		return
 	}
 
 	isStaged := cmd.waitForInstancesToStage(updatedApp)
-	fmt.Printf("Start#ApplicationWatchStaging, instancesStaged")
+	fmt.Println("Start#ApplicationWatchStaging, instancesStaged")
 	stopLoggingChan <- true
 	<-doneLoggingChan
-	fmt.Printf("Start#ApplicationWatchStaging, doneLoggingChan")
+	fmt.Println("Start#ApplicationWatchStaging, doneLoggingChan")
 
 	cmd.ui.Say("")
 
@@ -223,11 +224,13 @@ func (cmd Start) tailStagingLogs(app models.Application, startChan, doneChan cha
 
 	err := cmd.logRepo.TailLogsFor(app.Guid, onConnect, func(msg *logmessage.LogMessage) {
 		if msg.GetSourceName() == LogMessageTypeStaging {
+			fmt.Println("Start#tailStagingLogs, msg:%v", msg)
 			cmd.ui.Say(simpleLogMessageOutput(msg))
 		}
 	})
 
 	if err != nil {
+		fmt.Println("Start#tailStagingLogs, error:%v", err)
 		cmd.ui.Warn(T("Warning: error tailing logs"))
 		cmd.ui.Say("%s", err)
 		startChan <- true
@@ -248,8 +251,8 @@ func (cmd Start) waitForInstancesToStage(app models.Application) bool {
 	for isStagingError(err) && time.Since(stagingStartTime) < cmd.StagingTimeout {
 		cmd.ui.Wait(cmd.PingerThrottle)
 		_, err = cmd.appInstancesRepo.GetInstances(app.Guid)
-		fmt.Printf("Start#waitForInstancesToStage, isStagingError:%v", isStagingError(err))
-		fmt.Printf("Start#waitForInstancesToStage, time:%v", time.Since(stagingStartTime) < cmd.StagingTimeout)
+		fmt.Println("Start#waitForInstancesToStage, isStagingError:%v", isStagingError(err))
+		fmt.Println("Start#waitForInstancesToStage, time:%v", time.Since(stagingStartTime) < cmd.StagingTimeout)
 	}
 
 	if err != nil && !isStagingError(err) {
