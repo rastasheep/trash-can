@@ -1,7 +1,7 @@
 Cloud Foundry CLI [![Build Status](https://travis-ci.org/cloudfoundry/cli.png?branch=master)](https://travis-ci.org/cloudfoundry/cli)
 =================
 
-This is the official command line client for Cloud Foundry.
+//This is the official command line client for Cloud Foundry.
 
 You can follow our development progress on [Pivotal Tracker](https://www.pivotaltracker.com/s/projects/892938).
 
@@ -30,8 +30,8 @@ $ cf push
 #Further Reading and Getting Help
 * You can find further documentation at the docs page for the CLI [here](http://docs.cloudfoundry.org/devguide/#cf).
 * There is also help available in the CLI itself; type `cf help` for more information.
-* Each command also has help output available via `cf [command] --help` or `cf [command] -h`.   
-* For development guide on writing a cli plugin, see [here](https://github.com/cloudfoundry/cli/tree/master/plugin_examples).  
+* Each command also has help output available via `cf [command] --help` or `cf [command] -h`.
+* For development guide on writing a cli plugin, see [here](https://github.com/cloudfoundry/cli/tree/master/plugin_examples).
 * Finally, if you are still stuck, feel free to open a GitHub issue.
 
 Downloads
