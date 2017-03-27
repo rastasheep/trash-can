@@ -3,7 +3,7 @@ Cloud Foundry CLI [![Build Status](https://travis-ci.org/cloudfoundry/cli.png?br
 
 This is the official command line client for Cloud Foundry.
 
-You can follow our development progress on [Pivotal Tracker](https://www.pivotaltracker.com/s/projects/892938).
+//You can follow our development progress on [Pivotal Tracker](https://www.pivotaltracker.com/s/projects/892938).
 
 Getting Started
 ===============
